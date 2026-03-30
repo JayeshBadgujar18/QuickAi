@@ -1,9 +1,11 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import {AiToolsData} from '../assets/assets'
+import { useUser } from '@clerk/react'
 
 const Aitools = () => {
     const navigate=useNavigate();
+    const {user}=useUser();
   return (
     <div className='px-4 sm:px-20 xl:px-32 my-24'> 
 
@@ -19,9 +21,16 @@ const Aitools = () => {
 
         <div className='flex flex-wrap mt-10 justify-center'> 
 
-            {AiToolsData.map((item,index)=>{
+            {AiToolsData.map((tool,index)=>{
                 return(
-                    <div key={index} >
+                    <div key={index} className='max-w-xs sm:w-[250px] bg-[#FDFDFE] rounded-lg shadow-lg border border-gray-100 p-8 m-4 cursor-pointer hover:-translate-y-1 transition-all duration-300 cursor pointer'
+                     onClick={()=> user && navigate(tool.path)}>
+                        <tool.Icon className='text-white rounded-xl w-12 h-12 p-3' style={{background : `linear-gradient(to right, ${tool.bg.from}, ${tool.bg.to})`}}/>
+                        <h3 className='text-lg font-semibold text-gray-800 mb-2 mt-2'>{tool.title}</h3>
+                        <p className='text-gray-600 text-sm'>{tool.description}</p>
+
+
+
                       
                     </div>
                 )
