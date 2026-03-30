@@ -2,14 +2,18 @@ import { ArrowRight } from 'lucide-react';
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import {assets} from '../assets/assets'
+import { UserButton,useClerk,useUser } from '@clerk/react';
 
 const Navbar = () => {
     const navigate = useNavigate();
+    const {user} = useUser();
+    const {openSignIn} = useClerk();
   return (
     <div className='fixed w-full z-5 backdrop-blur-2xl flex justify-between items-center py-3 px-4 sm:px-20 xl:px-32'>
         <img src={assets.logo} alt="logo" className='w-32 sm:w-44 cursor-pointer' onClick={()=>navigate('/')} />
-        <button className='flex items-center gap-2 px-10 py-2.5 bg-primary text-white rounded-full cursor-pointer'>Get Started <ArrowRight className='w-4 h-4'/></button>
-
+        {
+            user ? <UserButton/> : <button onClick={openSignIn} className='flex items-center gap-2 px-10 py-2.5 bg-primary text-white rounded-full cursor-pointer'>Get Started <ArrowRight className='w-4 h-4'/></button>
+        }
     </div>
   )
 }
