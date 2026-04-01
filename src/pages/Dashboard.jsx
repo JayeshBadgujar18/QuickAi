@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useUser } from '@clerk/react'
 import { useNavigate } from 'react-router-dom'
 import { dummyCreationData } from '../assets/assets'
 import { SquarePen, Hash, Image, Eraser, Scissors, FileText, Crown, Layers, Clock, ArrowRight } from 'lucide-react'
+import ReactMarkdown from 'react-markdown'
 
 const typeConfig = {
     'article': { label: 'Article', Icon: SquarePen, color: 'from-blue-500 to-cyan-500' },
@@ -16,6 +17,10 @@ const typeConfig = {
 const Dashboard = () => {
     const { user } = useUser();
     const navigate = useNavigate();
+    const [expandedId, setExpandedId] = useState(null);
+
+    // Dynamic plan status based on Clerk user metadata
+    const currentPlan = user?.publicMetadata?.plan || 'Free';
 
     const creations = dummyCreationData;
     const totalCreations = creations.length;
@@ -104,7 +109,9 @@ const Dashboard = () => {
                     <div className='space-y-4'>
                         <div className='flex items-center justify-between'>
                             <span className='text-sm text-gray-500'>Current Plan</span>
-                            <span className='text-sm font-semibold text-primary bg-primary/10 px-3 py-1 rounded-full'>Free</span>
+                            <span className={`text-sm font-semibold px-3 py-1 rounded-full ${currentPlan === 'Free' ? 'text-primary bg-primary/10' : 'text-amber-500 bg-amber-100'}`}>
+                                {currentPlan}
+                            </span>
                         </div>
 
                         <div>
@@ -159,7 +166,9 @@ const Dashboard = () => {
                                 const config = typeConfig[creation.type] || { label: creation.type, Icon: Layers, color: 'from-gray-400 to-gray-500' };
                                 const TypeIcon = config.Icon;
                                 return (
-                                    <div key={creation.id} className='flex items-start gap-4 p-4 rounded-lg hover:bg-gray-50 transition border border-transparent hover:border-gray-100 cursor-pointer'>
+                                    <div key={creation.id} 
+                                         onClick={() => setExpandedId(expandedId === creation.id ? null : creation.id)}
+                                         className='flex items-start gap-4 p-4 rounded-lg hover:bg-gray-50 transition border border-transparent hover:border-gray-100 cursor-pointer'>
                                         <div className={`w-10 h-10 rounded-lg bg-gradient-to-r ${config.color} flex items-center justify-center flex-shrink-0 mt-0.5`}>
                                             <TypeIcon className='w-5 h-5 text-white' />
                                         </div>
@@ -168,9 +177,16 @@ const Dashboard = () => {
                                                 <p className='text-sm font-medium text-gray-800 truncate'>{creation.prompt}</p>
                                                 <span className='text-xs text-gray-400 flex-shrink-0'>{formatDate(creation.created_at)}</span>
                                             </div>
-                                            <p className='text-xs text-gray-500 mt-1 line-clamp-2'>
-                                                {creation.content?.substring(0, 120)}...
-                                            </p>
+                                            
+                                            {expandedId === creation.id ? (
+                                                <div className="mt-3 mb-2 bg-gray-50/50 p-4 rounded-lg border border-gray-100 overflow-hidden prose prose-sm max-w-none text-gray-600 prose-headings:text-gray-800">
+                                                    <ReactMarkdown>{creation.content}</ReactMarkdown>
+                                                </div>
+                                            ) : (
+                                                <p className='text-xs text-gray-500 mt-1 line-clamp-2'>
+                                                    {creation.content?.substring(0, 120)}...
+                                                </p>
+                                            )}
                                             <div className='flex items-center gap-2 mt-2'>
                                                 <span className={`text-xs font-medium px-2 py-0.5 rounded-full bg-gradient-to-r ${config.color} text-white`}>
                                                     {config.label}
