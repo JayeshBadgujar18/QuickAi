@@ -42,7 +42,7 @@ const Sidebar = () => {
                 fixed top-0 left-0 z-50 h-screen w-64 bg-white border-r border-gray-200
                 flex flex-col transition-transform duration-300 ease-in-out
                 ${isOpen ? 'translate-x-0' : '-translate-x-full'}
-                md:translate-x-0 md:static md:z-auto
+                md:translate-x-0 md:sticky md:top-0 md:z-auto
             `}>
                 {/* Logo */}
                 <div className='flex items-center justify-between px-5 py-4 border-b border-gray-100'>
