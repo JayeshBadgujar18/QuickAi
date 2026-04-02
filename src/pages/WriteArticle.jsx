@@ -21,9 +21,9 @@ const WriteArticle = () => {
 
 
   return (
-    <div className='h-full overflow-y-scroll p-6 flex items-start flex-wrap gap-4 text-slate-700'>
+    <div className='h-full overflow-y-scroll p-6 flex flex-col lg:flex-row items-start gap-6 text-slate-700'>
    {/* left col */}
-   <form onSubmit={onSubmitHandler} className='w-full p-4 max-w-lg bg-white rounded-lg border border-gray-200 shadow-sm'>
+   <form onSubmit={onSubmitHandler} className='w-full lg:w-96 flex-shrink-0 p-5 bg-white rounded-lg border border-gray-200 shadow-sm'>
 
     <div className='flex items-center gap-3'>
 
@@ -37,11 +37,11 @@ const WriteArticle = () => {
     
     <p className='mt-4 font-medium text-sm'>Article Length</p>
 
-    <div className='flex flex-wrap gap-3 mt-3 sm:max-w-9/11'>
+    <div className='flex flex-col gap-3 mt-3'>
       {articleLength.map((item,index)=>(
-       
-          <span key={index} onClick={()=>setSelectedLength(item.length)} className={`text-xs px-4 py-1 border rounded-full cursor-pointer ${selectedLength === item.length ? 'bg-primary text-white' : ''}`}>{item.text}</span>
-        
+          <div key={index} onClick={()=>setSelectedLength(item.length)} className={`text-sm px-4 py-3 rounded-lg cursor-pointer transition-all border ${selectedLength === item.length ? 'bg-primary text-white border-primary shadow-sm' : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300 hover:shadow-sm'}`}>
+            {item.text}
+          </div>
       ))}
     </div>
     <br />
@@ -55,7 +55,20 @@ const WriteArticle = () => {
 
    {/* right col */}
 
-   <div>
+   <div className='w-full flex-1 p-5 bg-white rounded-lg flex flex-col border border-gray-200 min-h-[500px]'>
+     <div className='flex items-center gap-3'>
+      <Edit className='w-5 h-5 text-[#4A7AFF]'/>
+      <h1 className='text-xl font-semibold'> Generated Article</h1>
+     </div>
+
+     <div className='flex-1 flex justify-center items-center'>
+
+      <div className='text-sm flex flex-col items-center gap-5 text-gray-400'>
+        <Edit className='w-9 h-9'/>
+        <p>Enter a Topic and <span className='text-primary'>"Generate Article"</span> To get Started</p>
+
+      </div>
+     </div>
 
 
    </div>
